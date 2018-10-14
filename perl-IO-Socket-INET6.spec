@@ -4,16 +4,15 @@
 #
 Name     : perl-IO-Socket-INET6
 Version  : 2.72
-Release  : 2
+Release  : 3
 URL      : https://cpan.metacpan.org/authors/id/S/SH/SHLOMIF/IO-Socket-INET6-2.72.tar.gz
 Source0  : https://cpan.metacpan.org/authors/id/S/SH/SHLOMIF/IO-Socket-INET6-2.72.tar.gz
 Source1  : http://http.debian.net/debian/pool/main/libi/libio-socket-inet6-perl/libio-socket-inet6-perl_2.72-2.debian.tar.xz
 Summary  : 'Object interface for AF_INET/AF_INET6 domain sockets'
 Group    : Development/Tools
 License  : Artistic-1.0 Artistic-1.0-Perl GPL-1.0 GPL-2.0
-Requires: perl-IO-Socket-INET6-license
-Requires: perl-IO-Socket-INET6-man
-Requires: perl(Socket6)
+Requires: perl-IO-Socket-INET6-license = %{version}-%{release}
+BuildRequires : buildreq-cpan
 BuildRequires : perl(Socket6)
 
 %description
@@ -23,6 +22,15 @@ IO::Socket::INET6 provides an object interface to creating and using sockets
 in both AF_INET|AF_INET6 domain. It is built upon the IO::Socket interface and
 inherits all the methods defined by IO::Socket.
 
+%package dev
+Summary: dev components for the perl-IO-Socket-INET6 package.
+Group: Development
+Provides: perl-IO-Socket-INET6-devel = %{version}-%{release}
+
+%description dev
+dev components for the perl-IO-Socket-INET6 package.
+
+
 %package license
 Summary: license components for the perl-IO-Socket-INET6 package.
 Group: Default
@@ -31,19 +39,11 @@ Group: Default
 license components for the perl-IO-Socket-INET6 package.
 
 
-%package man
-Summary: man components for the perl-IO-Socket-INET6 package.
-Group: Default
-
-%description man
-man components for the perl-IO-Socket-INET6 package.
-
-
 %prep
-tar -xf %{SOURCE1}
-cd ..
 %setup -q -n IO-Socket-INET6-2.72
-mkdir -p %{_topdir}/BUILD/IO-Socket-INET6-2.72/deblicense/
+cd ..
+%setup -q -T -D -n IO-Socket-INET6-2.72 -b 1
+mkdir -p deblicense/
 mv %{_topdir}/BUILD/debian/* %{_topdir}/BUILD/IO-Socket-INET6-2.72/deblicense/
 
 %build
@@ -68,13 +68,13 @@ make TEST_VERBOSE=1 test
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/perl-IO-Socket-INET6
-cp LICENSE %{buildroot}/usr/share/doc/perl-IO-Socket-INET6/LICENSE
-cp deblicense/copyright %{buildroot}/usr/share/doc/perl-IO-Socket-INET6/deblicense_copyright
+mkdir -p %{buildroot}/usr/share/package-licenses/perl-IO-Socket-INET6
+cp LICENSE %{buildroot}/usr/share/package-licenses/perl-IO-Socket-INET6/LICENSE
+cp deblicense/copyright %{buildroot}/usr/share/package-licenses/perl-IO-Socket-INET6/deblicense_copyright
 if test -f Makefile.PL; then
-make pure_install PERL_INSTALL_ROOT=%{buildroot}
+make pure_install PERL_INSTALL_ROOT=%{buildroot} INSTALLDIRS=vendor
 else
-./Build install --installdirs=site --destdir=%{buildroot}
+./Build install --installdirs=vendor --destdir=%{buildroot}
 fi
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
@@ -83,13 +83,13 @@ find %{buildroot} -type f -name '*.bs' -empty -exec rm -f {} ';'
 
 %files
 %defattr(-,root,root,-)
-/usr/lib/perl5/site_perl/5.26.1/IO/Socket/INET6.pm
+/usr/lib/perl5/vendor_perl/5.26.1/IO/Socket/INET6.pm
 
-%files license
-%defattr(-,root,root,-)
-/usr/share/doc/perl-IO-Socket-INET6/LICENSE
-/usr/share/doc/perl-IO-Socket-INET6/deblicense_copyright
-
-%files man
+%files dev
 %defattr(-,root,root,-)
 /usr/share/man/man3/IO::Socket::INET6.3
+
+%files license
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/perl-IO-Socket-INET6/LICENSE
+/usr/share/package-licenses/perl-IO-Socket-INET6/deblicense_copyright

@@ -4,7 +4,7 @@
 #
 Name     : perl-IO-Socket-INET6
 Version  : 2.72
-Release  : 14
+Release  : 15
 URL      : https://cpan.metacpan.org/authors/id/S/SH/SHLOMIF/IO-Socket-INET6-2.72.tar.gz
 Source0  : https://cpan.metacpan.org/authors/id/S/SH/SHLOMIF/IO-Socket-INET6-2.72.tar.gz
 Source1  : http://http.debian.net/debian/pool/main/libi/libio-socket-inet6-perl/libio-socket-inet6-perl_2.72-2.debian.tar.xz
@@ -107,4 +107,4 @@ find %{buildroot} -type f -name '*.bs' -empty -exec rm -f {} ';'
 
 %files perl
 %defattr(-,root,root,-)
-/usr/lib/perl5/vendor_perl/5.30.2/IO/Socket/INET6.pm
+/usr/lib/perl5/vendor_perl/5.30.3/IO/Socket/INET6.pm
